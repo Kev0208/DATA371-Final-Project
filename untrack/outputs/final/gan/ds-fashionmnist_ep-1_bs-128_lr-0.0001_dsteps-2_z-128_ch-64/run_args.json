@@ -1,0 +1,20 @@
+{
+  "dataset": "fashionmnist",
+  "data_dir": "./data/bigdata",
+  "download": false,
+  "device": "auto",
+  "epochs": 1,
+  "max_steps": 400,
+  "batch_size": 128,
+  "lr": 0.0001,
+  "beta1": 0.5,
+  "beta2": 0.999,
+  "d_steps": 2,
+  "label_smooth": 0.0,
+  "z_dim": 128,
+  "base_ch": 64,
+  "sample_every": 100,
+  "print_every": 400,
+  "grid": "lr=0.0001,0.0002,0.0004;d_steps=1,2",
+  "seed": 42
+}

@@ -1,0 +1,7 @@
+run_name,run_dir,knob1,val1,knob2,val2
+ds-fashionmnist_ep-1_bs-128_lr-0.0001_dsteps-1_z-128_ch-64,untrack/outputs/final/gan/ds-fashionmnist_ep-1_bs-128_lr-0.0001_dsteps-1_z-128_ch-64,lr,0.0001,d_steps,1
+ds-fashionmnist_ep-1_bs-128_lr-0.0001_dsteps-2_z-128_ch-64,untrack/outputs/final/gan/ds-fashionmnist_ep-1_bs-128_lr-0.0001_dsteps-2_z-128_ch-64,lr,0.0001,d_steps,2
+ds-fashionmnist_ep-1_bs-128_lr-0.0002_dsteps-1_z-128_ch-64,untrack/outputs/final/gan/ds-fashionmnist_ep-1_bs-128_lr-0.0002_dsteps-1_z-128_ch-64,lr,0.0002,d_steps,1
+ds-fashionmnist_ep-1_bs-128_lr-0.0002_dsteps-2_z-128_ch-64,untrack/outputs/final/gan/ds-fashionmnist_ep-1_bs-128_lr-0.0002_dsteps-2_z-128_ch-64,lr,0.0002,d_steps,2
+ds-fashionmnist_ep-1_bs-128_lr-0.0004_dsteps-1_z-128_ch-64,untrack/outputs/final/gan/ds-fashionmnist_ep-1_bs-128_lr-0.0004_dsteps-1_z-128_ch-64,lr,0.0004,d_steps,1
+ds-fashionmnist_ep-1_bs-128_lr-0.0004_dsteps-2_z-128_ch-64,untrack/outputs/final/gan/ds-fashionmnist_ep-1_bs-128_lr-0.0004_dsteps-2_z-128_ch-64,lr,0.0004,d_steps,2

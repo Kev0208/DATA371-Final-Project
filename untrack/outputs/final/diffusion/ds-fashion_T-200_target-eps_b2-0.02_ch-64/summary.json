@@ -1,0 +1,12 @@
+{
+  "T": 200,
+  "base_ch": 64,
+  "beta2": 0.02,
+  "device": "cuda",
+  "epochs": 1,
+  "final_step": 468,
+  "run_name": "ds-fashion_T-200_target-eps_b2-0.02_ch-64",
+  "seconds": 11.35,
+  "target": "eps",
+  "time_emb_dim": 128
+}
