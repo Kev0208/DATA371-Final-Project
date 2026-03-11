@@ -80,7 +80,7 @@ untrack/outputs/final/
       run_args.json       # hyperparameters
       train_log.csv       # step, lossD, lossG, sec_per_step
       samples/            # grid_step{N}.png at every sample_every steps
-      checkpoint.pt
+      checkpoint.pt       # generated locally, ignored by git
     baseline_loss_curves.png
     baseline_sample_progression.png
     grid_loss_curves.png
@@ -93,7 +93,7 @@ untrack/outputs/final/
       run_args.json
       summary.json
       samples/
-      checkpoints/
+      checkpoints/        # generated locally, ignored by git
     baseline_samples.png
     baseline_denoise.png
 ```
@@ -126,7 +126,7 @@ DATA371_Final/
     run_analysis.py
   data/
     bigdata/              # Fashion-MNIST (not committed)
-  untrack/                # all training outputs (not committed)
+  untrack/                # saved figures/sample outputs; checkpoints ignored
 ```
 
 No large files (data, checkpoints) are committed to git.
