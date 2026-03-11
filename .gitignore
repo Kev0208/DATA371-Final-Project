@@ -1,1 +1,7 @@
-
+data/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.egg-info/
+.ipynb_checkpoints/
