@@ -1,6 +1,6 @@
 # DATA 37100 — Final Project Summary Report
 
-**Student:** Kevin L.
+**Students:** Kevin L., Pengyun Wang
 **Due:** March 13, 2026
 **Dataset:** Fashion-MNIST (28×28 grayscale)
 **Model families:** GAN (DCGAN), Diffusion
