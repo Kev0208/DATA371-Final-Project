@@ -77,11 +77,11 @@ All other settings held fixed: `epochs=1`, `max-steps=400`, `batch-size=128`, `z
 
 The baseline run (`lr=0.0002`, `d_steps=1`) reached `lossD=1.14`, `lossG=4.86` at step 400. Early training (step 1) shows `lossD≈1.41`, `lossG≈0.98` — discriminator and generator initially balanced — then the generator loss rises as the discriminator learns to separate real from fake, and D loss fluctuates in the 0.8–1.4 range throughout. Sample grids show pure noise at step 1, rough blobs at step 100, recognizable silhouettes (bags, shoes, shirts) emerging by steps 200–300, with some texture detail at step 400.
 
-![GAN baseline loss curves](untrack/outputs/final/figures/01_baseline_loss_curves.png)
+<img src="untrack/outputs/final/figures/01_baseline_loss_curves.png" alt="GAN baseline loss curves" width="620">
 
 *Figure 1. GAN baseline loss curves for `lr=0.0002, d_steps=1`. The discriminator and generator remain active throughout training, but the discriminator becomes noticeably unstable by the end of the run.*
 
-![GAN baseline sample progression](untrack/outputs/final/figures/02_baseline_sample_progression.png)
+<img src="untrack/outputs/final/figures/02_baseline_sample_progression.png" alt="GAN baseline sample progression" width="680">
 
 *Figure 2. GAN baseline sample progression. Samples sharpen substantially between steps 100 and 400, but quality remains uneven and class coverage is limited.*
 
@@ -89,7 +89,7 @@ The baseline run (`lr=0.0002`, `d_steps=1`) reached `lossD=1.14`, `lossG=4.86` a
 
 The diffusion baseline produced coherent but blurry sample grids after 1 epoch (468 steps, 11.35 seconds). Loss decreased monotonically — no oscillation, no instability. The denoising trajectory is visible in the saved grid: high-noise images progressively denoised to coarse shapes. T=200 is modest for Fashion-MNIST; more reverse steps would sharpen the output, but this was not the purpose of this baseline. The diffusion run is included primarily as a stability reference.
 
-![Diffusion baseline samples](untrack/outputs/final/figures/03_diffusion_samples.png)
+<img src="untrack/outputs/final/figures/03_diffusion_samples.png" alt="Diffusion baseline samples" width="620">
 
 *Figure 3. Diffusion baseline samples after 1 epoch. The outputs are more stable than the GAN baseline but noticeably blurrier, which makes this model a useful stability reference rather than the sharpest generator in this budget.*
 
@@ -119,11 +119,11 @@ The diffusion baseline produced coherent but blurry sample grids after 1 epoch (
 
 The `lr=0.0002, d_steps=2` setting produced the highest diversity score. The `lr=0.0004` settings produced the lowest diversity despite moderate final losses, suggesting the generator converged to a narrower output distribution under higher learning rates.
 
-![GAN grid loss curves](untrack/outputs/final/figures/04_grid_loss_curves.png)
+<img src="untrack/outputs/final/figures/04_grid_loss_curves.png" alt="GAN grid loss curves" width="640">
 
 *Figure 4. Loss curves across the 3 x 2 GAN grid. The low-`lr`, high-`d_steps` setting shows the strongest oscillation, while the `lr=0.0002, d_steps=2` run is comparatively better behaved.*
 
-![GAN grid final samples](untrack/outputs/final/figures/05_grid_final_samples.png)
+<img src="untrack/outputs/final/figures/05_grid_final_samples.png" alt="GAN grid final samples" width="700">
 
 *Figure 5. Final sample grids for all six GAN runs. Visually, `lr=0.0002, d_steps=2` offers the best balance of recognizable silhouettes, sharper edges, and output variety, while the `lr=0.0004` runs show more repetition and coarser texture.*
 
@@ -135,7 +135,7 @@ The `lr=0.0002, d_steps=2` setting produced the highest diversity score. The `lr
 
 **Observation:** `lossD` swings from near-zero to >5.15 in individual steps, then partially recovers. `stdD` over the last 100 steps = 0.518, the highest in the grid. `lossG` climbs steadily to 5.94 by step 400. Sample grids show slow, unstable visual improvement: the generator is receiving a signal that is alternately too strong (D near-zero = gradient vanishes for G) and too weak (D spiking = D itself is temporarily miscalibrated).
 
-![Failure mode oscillation curve](untrack/outputs/final/figures/06_failure_oscillation.png)
+<img src="untrack/outputs/final/figures/06_failure_oscillation.png" alt="Failure mode oscillation curve" width="620">
 
 *Figure 6. Failure-mode loss curve for `lr=0.0001, d_steps=2`. The discriminator repeatedly swings between very low and very high loss, while generator loss keeps climbing.*
 
