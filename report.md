@@ -77,9 +77,21 @@ All other settings held fixed: `epochs=1`, `max-steps=400`, `batch-size=128`, `z
 
 The baseline run (`lr=0.0002`, `d_steps=1`) reached `lossD=1.14`, `lossG=4.86` at step 400. Early training (step 1) shows `lossD≈1.41`, `lossG≈0.98` — discriminator and generator initially balanced — then the generator loss rises as the discriminator learns to separate real from fake, and D loss fluctuates in the 0.8–1.4 range throughout. Sample grids show pure noise at step 1, rough blobs at step 100, recognizable silhouettes (bags, shoes, shirts) emerging by steps 200–300, with some texture detail at step 400.
 
+![GAN baseline loss curves](untrack/outputs/final/figures/01_baseline_loss_curves.png)
+
+*Figure 1. GAN baseline loss curves for `lr=0.0002, d_steps=1`. The discriminator and generator remain active throughout training, but the discriminator becomes noticeably unstable by the end of the run.*
+
+![GAN baseline sample progression](untrack/outputs/final/figures/02_baseline_sample_progression.png)
+
+*Figure 2. GAN baseline sample progression. Samples sharpen substantially between steps 100 and 400, but quality remains uneven and class coverage is limited.*
+
 ### 3.2 Diffusion Baseline
 
 The diffusion baseline produced coherent but blurry sample grids after 1 epoch (468 steps, 11.35 seconds). Loss decreased monotonically — no oscillation, no instability. The denoising trajectory is visible in the saved grid: high-noise images progressively denoised to coarse shapes. T=200 is modest for Fashion-MNIST; more reverse steps would sharpen the output, but this was not the purpose of this baseline. The diffusion run is included primarily as a stability reference.
+
+![Diffusion baseline samples](untrack/outputs/final/figures/03_diffusion_samples.png)
+
+*Figure 3. Diffusion baseline samples after 1 epoch. The outputs are more stable than the GAN baseline but noticeably blurrier, which makes this model a useful stability reference rather than the sharpest generator in this budget.*
 
 ### 3.3 Controlled Experiment Results
 
@@ -107,6 +119,14 @@ The diffusion baseline produced coherent but blurry sample grids after 1 epoch (
 
 The `lr=0.0002, d_steps=2` setting produced the highest diversity score. The `lr=0.0004` settings produced the lowest diversity despite moderate final losses, suggesting the generator converged to a narrower output distribution under higher learning rates.
 
+![GAN grid loss curves](untrack/outputs/final/figures/04_grid_loss_curves.png)
+
+*Figure 4. Loss curves across the 3 x 2 GAN grid. The low-`lr`, high-`d_steps` setting shows the strongest oscillation, while the `lr=0.0002, d_steps=2` run is comparatively better behaved.*
+
+![GAN grid final samples](untrack/outputs/final/figures/05_grid_final_samples.png)
+
+*Figure 5. Final sample grids for all six GAN runs. Visually, `lr=0.0002, d_steps=2` offers the best balance of recognizable silhouettes, sharper edges, and output variety, while the `lr=0.0004` runs show more repetition and coarser texture.*
+
 ---
 
 ## 4. Failure Modes
@@ -115,19 +135,23 @@ The `lr=0.0002, d_steps=2` setting produced the highest diversity score. The `lr
 
 **Observation:** `lossD` swings from near-zero to >5.15 in individual steps, then partially recovers. `stdD` over the last 100 steps = 0.518, the highest in the grid. `lossG` climbs steadily to 5.94 by step 400. Sample grids show slow, unstable visual improvement: the generator is receiving a signal that is alternately too strong (D near-zero = gradient vanishes for G) and too weak (D spiking = D itself is temporarily miscalibrated).
 
-**Cause:** Two discriminator updates per generator step at a low learning rate creates a seesaw. The small `lr` means each update step moves the discriminator a tiny distance, but two consecutive steps overshoot the equilibrium, pushing D to near-perfect discrimination. At that point D's output is saturated (near zero for all generated samples), so the generator's gradient vanishes. D then regresses on the next generator step, then overshoots again. This is a textbook discriminator oscillation pattern caused by too-frequent updates relative to the generator's ability to respond.
+![Failure mode oscillation curve](untrack/outputs/final/figures/06_failure_oscillation.png)
+
+*Figure 6. Failure-mode loss curve for `lr=0.0001, d_steps=2`. The discriminator repeatedly swings between very low and very high loss, while generator loss keeps climbing.*
+
+**Likely cause:** This pattern is consistent with a seesaw dynamic created by two discriminator updates per generator step at a low learning rate. The small `lr` means each update is limited, but two consecutive discriminator steps can still push D temporarily toward near-perfect discrimination. During those stretches the generator likely receives a much weaker learning signal, after which D partially regresses and the cycle repeats.
 
 ### 4.2 Discriminator Instability / Failure — `lr=0.0002, d_steps=1`
 
 **Observation:** `finalD=1.14` is the highest in the grid — significantly above the 0.5 equilibrium. At this setting the discriminator ends training *losing* to the generator: it can no longer reliably classify real from fake. Visually, sample quality at step 400 is worse than expected for this learning rate.
 
-**Cause:** `lr=0.0002` with `d_steps=1` occasionally causes the generator to improve faster than the discriminator can track. When `lossD` exceeds 1.0, the discriminator's gradient signal to the generator becomes misleading — it is too easy to fool. This produces a failure mode opposite to oscillation: the generator gets a false "you're winning" signal and stops learning meaningful structure.
+**Likely cause:** `lr=0.0002` with `d_steps=1` appears to let the generator improve faster than the discriminator can track. When `lossD` stays above 1.0, the discriminator is no longer providing a reliable training signal, so the generator can improve against a weak opponent without learning equally meaningful structure.
 
 ### 4.3 Soft Mode Collapse / Low Diversity — `lr=0.0004`
 
 **Observation:** Both `d_steps=1` and `d_steps=2` at `lr=0.0004` show the lowest diversity scores (0.217–0.218), despite having the highest peak `lossD` spikes (up to 7.45 at `d_steps=1`). The final sample grids show repeated silhouette patterns — coarse shapes without texture diversity.
 
-**Cause:** A high learning rate causes large gradient steps that push both networks away from local equilibria quickly. The generator can learn a small set of "safe" outputs that consistently fool the discriminator in its current state, without needing to cover the full data distribution. This is a soft mode collapse — the generator has not fully collapsed to one sample, but it has reduced its effective output diversity. The high peak `lossD` reflects the discriminator catching up suddenly to these repeated patterns, then the cycle repeating.
+**Likely cause:** A high learning rate encourages larger parameter jumps, which can move both networks away from local equilibria quickly. The resulting behavior is consistent with soft mode collapse: the generator seems to settle on a narrower set of "safe" outputs that can fool the discriminator for a while, even though overall diversity drops.
 
 ---
 
